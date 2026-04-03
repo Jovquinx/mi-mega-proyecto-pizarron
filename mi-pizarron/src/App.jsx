@@ -111,7 +111,7 @@ function App() {
     if (!token) return;
 
     try {
-      const response = await fetch('http://localhost:8000/notas', {
+      const response = await fetch('https://pizarron-backend.onrender.com/notas', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -154,7 +154,7 @@ function App() {
     };
 
     try {
-      const response = await fetch('http://localhost:8000/notas', {
+      const response = await fetch('https://pizarron-backend.onrender.com/notas', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -182,7 +182,7 @@ function App() {
     const notaActualizada = { ...notaActual, ...datosNuevos };
 
     try {
-      await fetch(`http://localhost:8000/notas/${id}`, {
+      await fetch(`https://pizarron-backend.onrender.com/notas/${id}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
@@ -222,7 +222,7 @@ function App() {
     setVentanas(ventanas.filter(v => v.id !== id));
 
     try {
-      await fetch(`http://localhost:8000/notas/${id}`, {
+      await fetch(`https://pizarron-backend.onrender.com/notas/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

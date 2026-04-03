@@ -17,7 +17,7 @@ export default function Login({ onLoginSuccess }) {
         formData.append('username', username);
         formData.append('password', password);
 
-        const response = await fetch('http://localhost:8000/login', {
+        const response = await fetch('https://pizarron-backend.onrender.com/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: formData
@@ -34,7 +34,7 @@ export default function Login({ onLoginSuccess }) {
       }
     } else {
       try {
-        const response = await fetch('http://localhost:8000/registro', {
+        const response = await fetch('https://pizarron-backend.onrender.com/registro', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username, password })
