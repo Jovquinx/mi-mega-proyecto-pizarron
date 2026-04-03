@@ -4,6 +4,9 @@ import Draggable from 'react-draggable';
 import Login from './Login';
 import './App.css';
 
+// La misma magia aquí
+const API_URL = import.meta.env.VITE_API_URL || "https://pizarron-backend.onrender.com";
+
 // --- COMPONENTE VENTANA ---
 const Ventana = ({ ventana, actualizarContenido, actualizarTitulo, actualizarPosicion, eliminarNota, setPanHabilitado }) => {
   const nodeRef = useRef(null);
@@ -42,7 +45,6 @@ const Ventana = ({ ventana, actualizarContenido, actualizarTitulo, actualizarPos
       cancel=".cuerpo-ventana, .btn-cerrar, .input-titulo" 
       disabled={editando || editandoTitulo}
       onStart={() => setPanHabilitado(false)}
-      // NUEVO: Al soltar la nota, le enviamos las coordenadas a la base de datos
       onStop={(e, data) => {
         setPanHabilitado(true);
         actualizarPosicion(ventana.id, data.x, data.y);
@@ -111,7 +113,7 @@ function App() {
     if (!token) return;
 
     try {
-      const response = await fetch('https://pizarron-backend.onrender.com/notas', {
+      const response = await fetch(`${API_URL}/notas`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -123,7 +125,6 @@ function App() {
     }
   };
 
-  // Revisar sesión al inicio y cargar notas si estamos logueados
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -132,7 +133,6 @@ function App() {
     }
   }, []);
 
-  // Volver a cargar notas si cambiamos de usuario
   useEffect(() => {
     if (isAuthenticated) cargarNotas();
   }, [isAuthenticated]);
@@ -140,10 +140,10 @@ function App() {
   const handleCerrarSesion = () => {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
-    setVentanas([]); // Limpiamos el pizarrón al salir
+    setVentanas([]); 
   };
 
-  // 2. CREAR UNA NOTA EN LA BASE DE DATOS
+  // 2. CREAR UNA NOTA
   const agregarNota = async () => {
     const token = localStorage.getItem('token');
     const nuevaNota = {
@@ -154,7 +154,7 @@ function App() {
     };
 
     try {
-      const response = await fetch('https://pizarron-backend.onrender.com/notas', {
+      const response = await fetch(`${API_URL}/notas`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -165,24 +165,23 @@ function App() {
       
       if (response.ok) {
         const notaGuardada = await response.json();
-        setVentanas([...ventanas, notaGuardada]); // Guardamos la versión oficial con su ID real
+        setVentanas([...ventanas, notaGuardada]); 
       }
     } catch (error) {
       console.error("Error al guardar la nota:", error);
     }
   };
 
-  // 3. ACTUALIZAR NOTA (Esta función habla con Python para actualizar lo que le pidas)
+  // 3. ACTUALIZAR NOTA
   const actualizarNotaEnBD = async (id, datosNuevos) => {
     const token = localStorage.getItem('token');
     const notaActual = ventanas.find(v => v.id === id);
     if (!notaActual) return;
 
-    // Fusionamos los datos actuales con los cambios nuevos
     const notaActualizada = { ...notaActual, ...datosNuevos };
 
     try {
-      await fetch(`https://pizarron-backend.onrender.com/notas/${id}`, {
+      await fetch(`${API_URL}/notas/${id}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
@@ -215,14 +214,13 @@ function App() {
     actualizarNotaEnBD(id, { x: nuevaX, y: nuevaY });
   };
 
-  // 4. ELIMINAR NOTA DE LA BASE DE DATOS
+  // 4. ELIMINAR NOTA
   const eliminarNota = async (id) => {
     const token = localStorage.getItem('token');
-    // La borramos de la pantalla inmediatamente para que se sienta rápido
     setVentanas(ventanas.filter(v => v.id !== id));
 
     try {
-      await fetch(`https://pizarron-backend.onrender.com/notas/${id}`, {
+      await fetch(`${API_URL}/notas/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -258,9 +256,8 @@ function App() {
         maxScale={4}
         limitToBounds={false}
         panning={{ disabled: !panHabilitado }} 
-        // 👇 ESTAS SON LAS LÍNEAS NUEVAS 👇
-        wheel={{ step: 1 }}  
-        pinch={{ step: 5 }}
+        wheel={{ step: 0.4 }}  
+        pinch={{ step: 5 }} 
       >
         <TransformComponent wrapperClass="wrapper-lienzo" contentClass="contenido-lienzo">
           <div className="lienzo-infinito">

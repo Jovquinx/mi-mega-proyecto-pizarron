@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import './Login.css'; // ¡Importamos el nuevo diseño!
+import './Login.css';
+
+// Esta línea mágica decide qué URL usar. Si está en Vercel, usa la de Render. Si está en tu compu, usa localhost.
+const API_URL = import.meta.env.VITE_API_URL || "https://pizarron-backend.onrender.com";
 
 export default function Login({ onLoginSuccess }) {
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -17,7 +20,7 @@ export default function Login({ onLoginSuccess }) {
         formData.append('username', username);
         formData.append('password', password);
 
-        const response = await fetch('https://pizarron-backend.onrender.com/login', {
+        const response = await fetch(`${API_URL}/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: formData
@@ -34,7 +37,7 @@ export default function Login({ onLoginSuccess }) {
       }
     } else {
       try {
-        const response = await fetch('https://pizarron-backend.onrender.com/registro', {
+        const response = await fetch(`${API_URL}/registro`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username, password })
