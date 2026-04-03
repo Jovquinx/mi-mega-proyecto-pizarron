@@ -259,7 +259,7 @@ function App() {
         limitToBounds={false}
         panning={{ disabled: !panHabilitado }} 
         // 👇 ESTAS SON LAS LÍNEAS NUEVAS 👇
-        wheel={{ step: 0.4 }}  
+        wheel={{ step: 0.7 }}  
         pinch={{ step: 5 }}
       >
         <TransformComponent wrapperClass="wrapper-lienzo" contentClass="contenido-lienzo">
