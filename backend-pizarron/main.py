@@ -17,7 +17,10 @@ app = FastAPI(title="API de Mi Pizarrón")
 # Aquí le damos permiso a tu frontend (React) para hablar con este backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # En producción aquí va la URL de tu React, por ahora dejamos "*" para que acepte todo
+    allow_origins=[
+        "http://localhost:5173", # Para que siga funcionando cuando programas en tu compu
+        "https://mi-mega-proyecto-pizarron.vercel.app" # <-- ¡Pon tu link real aquí! (sin la barra / al final)
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
