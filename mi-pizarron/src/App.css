@@ -182,3 +182,29 @@
     border-right-color: var(--border);
   }
 }
+
+/* --- ADAPTACIÓN PARA CELULARES --- */
+@media (max-width: 768px) {
+  .barra-herramientas {
+    flex-direction: column; /* Apila el logo y los botones de arriba a abajo */
+    gap: 10px;
+    padding: 10px;
+    height: auto;
+  }
+  
+  .herramientas {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .btn-herramienta {
+    padding: 8px 12px;
+    font-size: 14px;
+    flex: 1; /* Hace que los botones abarquen todo el ancho disponible */
+    margin: 0 5px;
+  }
+
+  .ventana-arrastrable {
+    min-width: 220px; /* Hace que las notas sean un poquito más angostas para que quepan mejor */
+  }
+}
